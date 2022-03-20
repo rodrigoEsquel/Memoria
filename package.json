@@ -1,0 +1,25 @@
+{
+  "name": "memoria",
+  "version": "1.0.0",
+  "description": "juego de la memoria para r/argentinaPrograma",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rodrigoEsquel/Memoria.git"
+  },
+  "keywords": [
+    "memoria"
+  ],
+  "author": "Rodrigo Fernandez",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rodrigoEsquel/Memoria/issues"
+  },
+  "homepage": "https://github.com/rodrigoEsquel/Memoria#readme",
+  "dependencies": {
+    "bootstrap": "^5.1.3"
+  }
+}
