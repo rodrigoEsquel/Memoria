@@ -20,6 +20,22 @@ function memoria() {
     "bg-light",
     "bg-dark",
   ];
+  let IDcontador = 0;
+  let puntaje = 0;
+
+
+  function resetearJuego() {
+    quitarCartas();
+    if (IDcontador) {
+      clearInterval(IDcontador);
+    }
+    puntaje = 0;
+  }
+
+function actualizarPuntaje(puntaje) {
+  document.querySelector("#puntaje").innerText = puntaje;
+}
+
 
   function conseguirArrayAleatorio(numeroPares) {
     const pares = [];
@@ -45,12 +61,19 @@ function memoria() {
     });
   }
 
-  function crearCarta(element) {
-    const $nuevaCarta = document.createElement("div");
-    $nuevaCarta.id = `pareja-${element}`;
+  function crearCarta() {
+    const $nuevaCarta = document.createElement("div");    
     $nuevaCarta.className = "card border border-dark m-1 invisible";
-    $nuevaCarta.style = "width: 9rem";
+    $nuevaCarta.style = "width: 8rem";
     return $nuevaCarta;
+  }
+
+  function conseguirNombreCarta(id) {
+    return nombresParejas[id];
+  }
+
+  function conseguirColorCarta(id) {
+    return coloresParejas[id];
   }
 
   function crearCuerpoCarta(element) {
@@ -58,9 +81,11 @@ function memoria() {
     $cuerpoCarta.className = "card-body invisible";
     const $tituloCarta = document.createElement("h5");
     $tituloCarta.className = "card-title text-center";
-    $tituloCarta.innerText = nombresParejas[element];
+    $tituloCarta.innerText = conseguirNombreCarta(element);
     const $colorCarta = document.createElement("div");
-    $colorCarta.className = `${coloresParejas[element]} img-thumbnail ratio ratio-4x3 border border-dark`;
+    $colorCarta.className = `${conseguirColorCarta(
+      element
+    )} img-thumbnail ratio ratio-4x3 border border-dark`;
     $cuerpoCarta.appendChild($tituloCarta);
     $cuerpoCarta.appendChild($colorCarta);
     return $cuerpoCarta;
@@ -78,26 +103,28 @@ function memoria() {
     function funcionSegundaCarta(evento) {
       const $carta2 = evento.srcElement;
       voltearCarta($carta2);
-      console.log($carta1);
-      if ($carta1.id === $carta2.id) {
+      if ($carta1.innerHTML === $carta2.innerHTML) {
         setTimeout(() => {
           $carta1.classList.add("invisible");
           $carta2.classList.add("invisible");
         }, 500);
+        puntaje++;
+        actualizarPuntaje(puntaje);
       } else {
-          setTimeout(() => {
-            voltearCarta($carta1);
-            voltearCarta($carta2);
-          }, 500);
+        setTimeout(() => {
+          voltearCarta($carta1);
+          voltearCarta($carta2);
+        }, 500);
       }
-      if (false) {
+      if (puntaje === 8) {
+        clearInterval(IDcontador);
       }
       configurarClickCarta(funcionPrimeraCarta);
     }
   }
   function añadirCartas(arrayAleatorio) {
     arrayAleatorio.forEach((element) => {
-      const $nuevaCarta = crearCarta(element);
+      const $nuevaCarta = crearCarta();
       const $cuerpoCarta = crearCuerpoCarta(element);
       $nuevaCarta.appendChild($cuerpoCarta);
 
@@ -117,11 +144,25 @@ function memoria() {
   }
 
   function iniciarJuego() {
+    resetearJuego();
+
     quitarCartas();
     añadirCartas(conseguirArrayAleatorio(numeroPares));
     configurarClickCarta(funcionPrimeraCarta);
     mostrarCartas();
+    let contador = 0;
+    IDcontador = iniciarContador();
+
+    function iniciarContador() {
+      return setInterval(() => {
+        contador = Math.round((contador + 0.1) * 10) / 10;
+        document.querySelector("#contador").innerText = contador;
+      }, 100);
+    }
+    
   }
+
+  //añadirCartas(conseguirArrayAleatorio(numeroPares));
   document.querySelector("#start").onclick = iniciarJuego;
 }
 
