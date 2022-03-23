@@ -30,6 +30,7 @@ function memoria() {
       clearInterval(IDcontador);
     }
     puntaje = 0;
+    actualizarPuntaje(puntaje);
   }
 
 function actualizarPuntaje(puntaje) {
@@ -64,7 +65,7 @@ function actualizarPuntaje(puntaje) {
   function crearCarta() {
     const $nuevaCarta = document.createElement("div");    
     $nuevaCarta.className = "card border border-dark m-1 invisible";
-    $nuevaCarta.style = "width: 8rem";
+    $nuevaCarta.style = "width: 9rem";
     return $nuevaCarta;
   }
 
@@ -145,8 +146,6 @@ function actualizarPuntaje(puntaje) {
 
   function iniciarJuego() {
     resetearJuego();
-
-    quitarCartas();
     añadirCartas(conseguirArrayAleatorio(numeroPares));
     configurarClickCarta(funcionPrimeraCarta);
     mostrarCartas();
