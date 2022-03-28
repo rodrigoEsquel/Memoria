@@ -1,38 +1,49 @@
 function memoria() {
   //GLOBALES
+  const NUMERO_PARES = 8;
   let IDcontador = 0;
-  let puntaje = 0;
-  let contador = 0;
-  let primerClick = true;
+  let $puntaje = document.querySelector("#puntaje");
+  let $contador = document.querySelector("#contador");
+  let $turno = document.querySelector("#turno");
+  let clickHabilitado = true; // Se debe esperar a que finalizen los setTimeouts para manejas la comparacion de parejas o se genera un bug donde el siguiente "primerClick" es el que se utiliza en el setTimeout
   let $carta1 = "";
-  let turno = 0;
 
   //FUNCIONES
   function quitarCartas() {
     document.querySelector("#contenedor-cartas").innerHTML = "";
   }
 
-  function resetearJuego() {
-    quitarCartas();
-    primerClick = true;
+  function aumentarElemento(element) {
+    element.innerText = Number(element.innerText) + 1;
+  }
+
+  function resetearTurno() {
+    clickHabilitado = true;
+    $carta1 = "";
+  }
+
+  function detenerContador() {
     if (IDcontador) {
       clearInterval(IDcontador);
     }
-    puntaje = 0;
-    turno = 0;
-    document.querySelector("#puntaje").innerText = puntaje;
-    document.querySelector("#turno").innerText = turno;
+  }
+
+  function resetearJuego() {
+    quitarCartas();
+    resetearTurno();
+    detenerContador();
+    $puntaje.innerText = 0;
+    $turno.innerText = 0;
   }
 
   function crearCarta() {
     const $nuevaCarta = document.createElement("div");
     $nuevaCarta.className = "card border border-dark m-1 invisible";
     $nuevaCarta.style = "width: 9rem";
-    $nuevaCarta.onclick = manejarClickCarta;
     return $nuevaCarta;
   }
 
-  function conseguirNombreCarta(id) {
+  function conseguirNombreCarta(indice) {
     const nombresParejas = [
       "Azul",
       "Gris",
@@ -43,10 +54,10 @@ function memoria() {
       "Blanco",
       "Negro",
     ];
-    return nombresParejas[id];
+    return nombresParejas[indice];
   }
 
-  function conseguirColorCarta(id) {
+  function conseguirColorCarta(indice) {
     const coloresParejas = [
       "bg-primary",
       "bg-secondary",
@@ -57,7 +68,7 @@ function memoria() {
       "bg-light",
       "bg-dark",
     ];
-    return coloresParejas[id];
+    return coloresParejas[indice];
   }
 
   function crearCuerpoCarta(element) {
@@ -76,12 +87,11 @@ function memoria() {
   }
 
   function conseguirArrayAleatorio() {
-    const numeroPares = 8;
     const pares = [];
     const arrayAleatorio = [];
     let i = 0;
-    while (i < numeroPares) {
-      let posicion = Math.trunc(numeroPares * 2 * Math.random());
+    while (i < NUMERO_PARES) {
+      let posicion = Math.trunc(NUMERO_PARES * 2 * Math.random());
       if (arrayAleatorio[posicion] === undefined) {
         arrayAleatorio[posicion] = i;
         if (pares[i] === "OK") {
@@ -95,7 +105,11 @@ function memoria() {
   }
 
   function voltearCarta(element) {
-    element.childNodes[0].classList.toggle("invisible");
+    element.firstChild.classList.toggle("invisible");
+  }
+
+  function ocultarCarta(element) {
+    element.classList.add("invisible");
   }
 
   function aniadirCartas(arrayAleatorio) {
@@ -110,35 +124,38 @@ function memoria() {
 
   function iniciarContador() {
     return setInterval(() => {
-      contador = Math.round((contador + 0.1) * 10) / 10;
-      document.querySelector("#contador").innerText = contador;
-    }, 100);
+      aumentarElemento($contador);
+    }, 1000);
   }
 
   function manejarClickCarta(evento) {
-    voltearCarta(evento.target);
-    if (primerClick) {
-      $carta1 = evento.target;
-    } else {
-      let $carta2 = evento.target;
-      if ($carta1.innerHTML === $carta2.innerHTML) {
-        setTimeout(() => {
-          $carta1.classList.add("invisible");
-          $carta2.classList.add("invisible");
-        }, 500);
-        document.querySelector("#puntaje").innerText = puntaje++;
+    if (clickHabilitado && evento.target.classList.contains("card")) { // Se fija que el click sea sobre una carta - (Ver definicion de clickHabilitado)
+      voltearCarta(evento.target);
+      if ($carta1 === "") {
+        $carta1 = evento.target;
       } else {
-        setTimeout(() => {
-          voltearCarta($carta1);
-          voltearCarta($carta2);
-        }, 500);
-      }
-      document.querySelector("#turno").innerText = turno++;
-      if (puntaje === 8) {
-        clearInterval(IDcontador);
+        let $carta2 = evento.target;
+        clickHabilitado = false;
+        if ($carta1.innerHTML === $carta2.innerHTML) {
+          setTimeout(() => {
+            ocultarCarta($carta1);
+            ocultarCarta($carta2);
+            resetearTurno();
+          }, 500);
+          aumentarElemento($puntaje);
+        } else {
+          setTimeout(() => {
+            voltearCarta($carta1);
+            voltearCarta($carta2);
+            resetearTurno();
+          }, 500);
+        }
+        aumentarElemento($turno);
+        if ($puntaje.innerText === NUMERO_PARES) {
+          detenerContador();
+        }
       }
     }
-    primerClick = !primerClick;
   }
 
   function mostrarCartas() {
@@ -151,14 +168,13 @@ function memoria() {
     resetearJuego();
     aniadirCartas(conseguirArrayAleatorio());
     mostrarCartas();
-    contador = 0;
+    $contador.innerText = 0;
     IDcontador = iniciarContador();
   }
 
   //INICIO
   document.querySelector("#start").onclick = iniciarJuego;
-
-  
+  document.querySelector("#contenedor-cartas").onclick = manejarClickCarta;
 }
 
 memoria();
