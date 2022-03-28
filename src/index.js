@@ -1,9 +1,9 @@
 function memoria() {
   //GLOBALES
   const NUMERO_PARES = 8;
-  let idContador = 0;
+  let idCronometro = 0;
   let $puntaje = document.querySelector("#puntaje");
-  let $contador = document.querySelector("#contador");
+  let $cronometro = document.querySelector("#cronometro");
   let $turno = document.querySelector("#turno");
   let clickHabilitado = true; // Se debe esperar a que finalizen los setTimeouts de la comparacion de parejas o se genera un bug donde el siguiente "primerClick" es el que se utiliza en el setTimeout
   let $carta1 = "";
@@ -22,16 +22,16 @@ function memoria() {
     $carta1 = "";
   }
 
-  function detenerContador() {
-    if (!!idContador) {
-      clearInterval(idContador);
+  function detenerCronometro() {
+    if (!!idCronometro) {
+      clearInterval(idCronometro);
     }
   }
 
   function resetearJuego() {
     quitarCartas();
     resetearTurno();
-    detenerContador();
+    detenerCronometro();
     $puntaje.innerText = 0;
     $turno.innerText = 0;
   }
@@ -120,9 +120,9 @@ function memoria() {
     });
   }
 
-  function iniciarContador() {
+  function iniciarCronometro() {
     return setInterval(() => {
-      aumentarElemento($contador);
+      aumentarElemento($cronometro);
     }, 1000);
   }
 
@@ -143,7 +143,6 @@ function compararCartas($carta1,$carta2) {
   }
 }
 
-
   function manejarClickCarta(evento) {
     if (clickHabilitado && evento.target.classList.contains("card")) { // Se fija que el click sea sobre una carta - (Ver definicion de clickHabilitado)
       voltearCarta(evento.target);
@@ -155,7 +154,7 @@ function compararCartas($carta1,$carta2) {
         compararCartas($carta1,$carta2);
         aumentarElemento($turno);
         if ($puntaje.innerText === NUMERO_PARES) {
-          detenerContador();
+          detenerCronometro();
         }
       }
     }
@@ -171,8 +170,8 @@ function compararCartas($carta1,$carta2) {
     resetearJuego();
     aniadirCartas(conseguirArrayAleatorio());
     mostrarCartas();
-    $contador.innerText = 0;
-    idContador = iniciarContador();
+    $cronometro.innerText = 0;
+    idCronometro = iniciarCronometro();
   }
 
   //INICIO
