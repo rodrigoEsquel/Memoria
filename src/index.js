@@ -38,8 +38,8 @@ function memoria() {
 
   function crearCarta() {
     const $nuevaCarta = document.createElement("div");
-    $nuevaCarta.className = "card border border-dark m-1 invisible";
-    $nuevaCarta.style = "width: 9rem";
+    $nuevaCarta.className = "card border border-dark m-1 invisible ratio ratio-1x1";
+    $nuevaCarta.style = "width: 20%";
     return $nuevaCarta;
   }
 
@@ -75,7 +75,7 @@ function memoria() {
     const $cuerpoCarta = document.createElement("div");
     $cuerpoCarta.className = "card-body invisible";
     const $tituloCarta = document.createElement("h5");
-    $tituloCarta.className = "card-title text-center";
+    $tituloCarta.className = "card-title text-center d-none d-lg-block";
     $tituloCarta.innerText = conseguirNombreCarta(element);
     const $colorCarta = document.createElement("div");
     $colorCarta.className = `${conseguirColorCarta(
