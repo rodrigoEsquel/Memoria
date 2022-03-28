@@ -1,11 +1,11 @@
 function memoria() {
   //GLOBALES
   const NUMERO_PARES = 8;
-  let IDcontador = 0;
+  let idContador = 0;
   let $puntaje = document.querySelector("#puntaje");
   let $contador = document.querySelector("#contador");
   let $turno = document.querySelector("#turno");
-  let clickHabilitado = true; // Se debe esperar a que finalizen los setTimeouts para manejas la comparacion de parejas o se genera un bug donde el siguiente "primerClick" es el que se utiliza en el setTimeout
+  let clickHabilitado = true; // Se debe esperar a que finalizen los setTimeouts de la comparacion de parejas o se genera un bug donde el siguiente "primerClick" es el que se utiliza en el setTimeout
   let $carta1 = "";
 
   //FUNCIONES
@@ -23,8 +23,8 @@ function memoria() {
   }
 
   function detenerContador() {
-    if (IDcontador) {
-      clearInterval(IDcontador);
+    if (!!idContador) {
+      clearInterval(idContador);
     }
   }
 
@@ -78,9 +78,7 @@ function memoria() {
     $tituloCarta.className = "card-title text-center d-none d-lg-block";
     $tituloCarta.innerText = conseguirNombreCarta(element);
     const $colorCarta = document.createElement("div");
-    $colorCarta.className = `${conseguirColorCarta(
-      element
-    )} img-thumbnail ratio ratio-4x3 border border-dark`;
+    $colorCarta.className = `${conseguirColorCarta(element)} img-thumbnail ratio ratio-4x3 border border-dark`;
     $cuerpoCarta.appendChild($tituloCarta);
     $cuerpoCarta.appendChild($colorCarta);
     return $cuerpoCarta;
@@ -128,6 +126,24 @@ function memoria() {
     }, 1000);
   }
 
+function compararCartas($carta1,$carta2) {
+  if ($carta1.innerHTML === $carta2.innerHTML) {
+    setTimeout(() => {
+      ocultarCarta($carta1);
+      ocultarCarta($carta2);
+      resetearTurno();
+    }, 500);
+    aumentarElemento($puntaje);
+  } else {
+    setTimeout(() => {
+      voltearCarta($carta1);
+      voltearCarta($carta2);
+      resetearTurno();
+    }, 500);
+  }
+}
+
+
   function manejarClickCarta(evento) {
     if (clickHabilitado && evento.target.classList.contains("card")) { // Se fija que el click sea sobre una carta - (Ver definicion de clickHabilitado)
       voltearCarta(evento.target);
@@ -136,20 +152,7 @@ function memoria() {
       } else {
         let $carta2 = evento.target;
         clickHabilitado = false;
-        if ($carta1.innerHTML === $carta2.innerHTML) {
-          setTimeout(() => {
-            ocultarCarta($carta1);
-            ocultarCarta($carta2);
-            resetearTurno();
-          }, 500);
-          aumentarElemento($puntaje);
-        } else {
-          setTimeout(() => {
-            voltearCarta($carta1);
-            voltearCarta($carta2);
-            resetearTurno();
-          }, 500);
-        }
+        compararCartas($carta1,$carta2);
         aumentarElemento($turno);
         if ($puntaje.innerText === NUMERO_PARES) {
           detenerContador();
@@ -169,7 +172,7 @@ function memoria() {
     aniadirCartas(conseguirArrayAleatorio());
     mostrarCartas();
     $contador.innerText = 0;
-    IDcontador = iniciarContador();
+    idContador = iniciarContador();
   }
 
   //INICIO
