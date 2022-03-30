@@ -14,15 +14,24 @@
 <body>
   <div class="container">
     <div class="row">
-      <div class="bg-dark bg-gradient bg-opacity-50 col-6 d-flex flex-fill justify-content-center">
-        <div id="contenedor-cartas" class="d-flex flex-wrap w-100 justify-content-center">
+      <div class="col-md-3 bg-dark bg-gradient bg-opacity-90 p-3 justify-content-center">
+        <button id="start" class="btn btn-light rounded-pill w-100">Start</button>
+        <div class="text-center text-white m-1 border-bottom border-light">
+          <h4>TIEMPO</h4>
+          <h4 id="cronometro">0</h4>
+        </div>
+        <div class="text-center text-white m-1 border-bottom border-light">
+          <h4>PUNTAJE</h4>
+          <h4 id="puntaje">0</h4>
+        </div>
+        <div class="text-center text-white m-1 border-bottom border-light">
+          <h4>TURNO</h4>
+          <h4 id="turno">0</h4>
         </div>
       </div>
-      <div class="col-3 bg-dark bg-gradient bg-opacity-90 p-3 justify-content-center">
-        <button id="start" class="btn btn-light rounded-pill w-100">Start</button>
-        <div class="text-center text-white m-1 border-bottom border-light"><h4>TIEMPO</h4><h3 id="cronometro">0</h3></div>
-        <div class="text-center text-white m-1 border-bottom border-light"><h4>PUNTAJE</h4><h3 id="puntaje">0</h3></div>
-        <div class="text-center text-white m-1 border-bottom border-light"><h4>TURNO</h4><h3 id="turno">0</h3></div>
+      <div class="bg-dark bg-gradient bg-opacity-50 col-md-6 d-flex flex-fill justify-content-center">
+        <div id="contenedor-cartas" class="d-flex flex-wrap w-100 justify-content-center">
+        </div>
       </div>
     </div>
   </div>
